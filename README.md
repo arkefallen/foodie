@@ -1,16 +1,33 @@
-# foodie
+## Overview
 
-A new Flutter project.
+Foodie is a Flutter application that allows users to browse a list of restaurants fetched from the Dicoding Restaurant API (https://restaurant-api.dicoding.dev/#/). The app provides detailed information about each restaurant, including its name, description, locations, available menus, and rating. It enables user to add review to specified restaurant by filling its name and the review description
 
-## Getting Started
+## Features
 
-This project is a starting point for a Flutter application.
+- Browse a list of restaurants
+- View detailed information about each restaurant
+- Search for restaurants by name
+- Add new review to specific restaurant
 
-A few resources to get you started if this is your first Flutter project:
+## How to Use the App
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+1. **Clone the repository:**
+    ```sh
+    git clone https://github.com/yourusername/foodie.git
+    ```
+2. **Navigate to the project directory:**
+    ```sh
+    cd foodie
+    ```
+3. **Install dependencies:**
+    ```sh
+    flutter pub get
+    ```
+4. **Run the app:**
+    ```sh
+    flutter run
+    ```
+5. **Explore the app:**
+    - Browse the list of restaurants on the home screen.
+    - Tap on a restaurant to view its details.
+    - Use the search bar to find restaurants by name.
