@@ -50,7 +50,8 @@ class Restaurant {
   factory Restaurant.fromRawJsonListRestaurant(String str) =>
       Restaurant.fromJson(json.decode(str));
 
-  factory Restaurant.fromJsonListRestaurant(Map<String, dynamic> json) => Restaurant(
+  factory Restaurant.fromJsonListRestaurant(Map<String, dynamic> json) =>
+      Restaurant(
         id: json["id"],
         name: json["name"],
         description: json["description"],

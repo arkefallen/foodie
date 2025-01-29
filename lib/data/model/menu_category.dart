@@ -22,13 +22,15 @@ class Category {
 }
 
 class RestaurantCategory extends Category {
-    RestaurantCategory({
+  RestaurantCategory({
     required super.name,
   });
 
-  factory RestaurantCategory.fromRawJson(String str) => RestaurantCategory.fromJson(json.decode(str));
+  factory RestaurantCategory.fromRawJson(String str) =>
+      RestaurantCategory.fromJson(json.decode(str));
 
-  factory RestaurantCategory.fromJson(Map<String, dynamic> json) => RestaurantCategory(
+  factory RestaurantCategory.fromJson(Map<String, dynamic> json) =>
+      RestaurantCategory(
         name: json["name"],
       );
 

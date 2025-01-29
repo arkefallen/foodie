@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:foodie/data/datasource/restaurant_service.dart';
 import 'package:foodie/screens/state/list_restaurant_state.dart';
@@ -12,15 +14,24 @@ class ListRestaurantProvider with ChangeNotifier {
       : _restaurantService = restaurantService;
 
   Future<void> fetchListRestaurants() async {
-    _state = ListRestaurantLoading();
-    notifyListeners();
+    try {
+      _state = ListRestaurantLoading();
+      notifyListeners();
 
-    final response = await _restaurantService.getListRestaurants();
-    if (response.error != null && response.error as bool) {
-      _state = ListRestaurantError(error: response.message.toString());
-    } else {
-      _state = ListRestaurantSuccess(restaurants: response.restaurants!.toList());
+      final response = await _restaurantService.getListRestaurants();
+      if (response.error != null && response.error as bool) {
+        _state = ListRestaurantError(error: response.message.toString());
+      } else {
+        _state =
+            ListRestaurantSuccess(restaurants: response.restaurants!.toList());
+      }
+      notifyListeners();
+    } on SocketException catch (e) {
+      _state = ListRestaurantError(error: e.message);
+      notifyListeners();
+    } catch (e) {
+      _state = ListRestaurantError(error: e.toString());
+      notifyListeners();
     }
-    notifyListeners();
   }
 }

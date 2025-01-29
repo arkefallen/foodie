@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:foodie/data/model/add_review_model.dart';
 import 'package:foodie/data/model/detail_restaurant_model.dart';
 import 'package:foodie/data/model/list_restaurants_model.dart';
@@ -17,6 +19,8 @@ class RestaurantService {
       } else {
         throw Exception('Failed to load list restaurants');
       }
+    } on SocketException catch (_) {
+      throw const SocketException("No Internet Connection");
     } catch (e) {
       throw Exception(e.toString());
     }
@@ -30,6 +34,8 @@ class RestaurantService {
 
       var data = await response.stream.bytesToString();
       return DetailRestaurant.fromRawJson(data);
+    } on SocketException catch (_) {
+      throw const SocketException("No Internet Connection");
     } catch (e) {
       throw Exception('Failed to load detail restaurant');
     }
@@ -44,6 +50,8 @@ class RestaurantService {
 
       var data = await response.stream.bytesToString();
       return SearchRestaurant.fromRawJson(data);
+    } on SocketException catch (_) {
+      throw const SocketException("No Internet Connection");
     } catch (e) {
       throw Exception('Failed to search restaurant');
     }
@@ -67,6 +75,8 @@ class RestaurantService {
 
       var data = await response.stream.bytesToString();
       return AddReview.fromRawJson(data);
+    } on SocketException catch (_) {
+      throw const SocketException("No Internet Connection");
     } catch (e) {
       throw Exception('Failed to add review');
     }

@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:foodie/provider/bottom_navigation_provider.dart';
 import 'package:foodie/screens/restaurant_screen.dart';
 import 'package:foodie/screens/search_restaurant_screen.dart';
+import 'package:provider/provider.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -15,17 +17,11 @@ class _HomeScreenState extends State<HomeScreen> {
     const SearchRestaurantScreen(),
   ];
 
-  int _selectedIndex = 0;
-
-  @override
-  void initState() {
-    super.initState();
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: _listWidget.elementAt(_selectedIndex),
+      body: _listWidget
+          .elementAt(context.watch<BottomNavigationProvider>().currentIndex),
       bottomNavigationBar: BottomNavigationBar(
         items: const [
           BottomNavigationBarItem(
@@ -37,11 +33,9 @@ class _HomeScreenState extends State<HomeScreen> {
             label: "Cari",
           ),
         ],
-        currentIndex: _selectedIndex,
+        currentIndex: context.watch<BottomNavigationProvider>().currentIndex,
         onTap: (index) {
-          setState(() {
-            _selectedIndex = index;
-          });
+          context.read<BottomNavigationProvider>().setIndex(index);
         },
       ),
     );

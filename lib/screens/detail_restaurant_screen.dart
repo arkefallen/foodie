@@ -5,6 +5,7 @@ import 'package:foodie/provider/add_review_provider.dart';
 import 'package:foodie/provider/detail_restaurant_provider.dart';
 import 'package:foodie/screens/state/add_review_state.dart';
 import 'package:foodie/screens/state/detail_restaurant_state.dart';
+import 'package:foodie/screens/widget/restaurant_rating.dart';
 import 'package:provider/provider.dart';
 
 class DetailRestaurantScreen extends StatefulWidget {
@@ -23,9 +24,12 @@ class _DetailRestaurantScreenState extends State<DetailRestaurantScreen> {
   @override
   void initState() {
     super.initState();
-    context
-        .read<DetailRestaurantProvider>()
-        .fetchDetailRestaurant(widget.restaurantId);
+    Future.microtask(() {
+      // ignore: use_build_context_synchronously
+      context
+          .read<DetailRestaurantProvider>()
+          .fetchDetailRestaurant(widget.restaurantId);
+    });
   }
 
   @override
@@ -63,233 +67,214 @@ class _DetailRestaurantScreenState extends State<DetailRestaurantScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        leading: IconButton(
-          icon: const Icon(Icons.arrow_back),
-          onPressed: () {
-            Navigator.pop(context);
-          },
+    return Hero(
+      tag: widget.restaurantId,
+      child: Scaffold(
+        appBar: AppBar(
+          leading: IconButton(
+            icon: const Icon(Icons.arrow_back),
+            onPressed: () {
+              Navigator.pop(context);
+            },
+          ),
         ),
-      ),
-      body: Consumer<DetailRestaurantProvider>(
-        builder: (context, provider, _) {
-          final state = provider.state;
-          if (state is DetailRestaurantLoading) {
-            return const Center(
-              child: CircularProgressIndicator(),
-            );
-          } else if (state is DetailRestaurantSuccess) {
-            return Padding(
-              padding: const EdgeInsets.only(left: 16.0, right: 16.0),
-              child: ListView(
-                children: [
-                  const SizedBox(
-                    height: 24.0,
-                  ),
-                  Hero(
-                    tag: RestaurantImage.small
-                        .getImageUrl(state.restaurant.pictureId.toString()),
-                    child: ClipRRect(
+        body: Consumer<DetailRestaurantProvider>(
+          builder: (context, provider, _) {
+            final state = provider.state;
+            if (state is DetailRestaurantLoading) {
+              return const Center(
+                child: CircularProgressIndicator(),
+              );
+            } else if (state is DetailRestaurantSuccess) {
+              return Padding(
+                padding: const EdgeInsets.only(left: 16.0, right: 16.0),
+                child: ListView(
+                  children: [
+                    const SizedBox(
+                      height: 24.0,
+                    ),
+                    ClipRRect(
                       borderRadius: BorderRadius.circular(16),
                       child: Image.network(
-                        RestaurantImage.large
+                        RestaurantImage.medium
                             .getImageUrl(state.restaurant.pictureId.toString()),
                         fit: BoxFit.cover,
                       ),
                     ),
-                  ),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.only(top: 12),
-                        child: Row(
-                          children: state.restaurant.categories!
-                              .map(
-                                (category) =>
-                                    _buildCategoryComponent(context, category),
-                              )
-                              .toList(),
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 12),
-                        child: Text(
-                          state.restaurant.name.toString(),
-                          style: Theme.of(context)
-                              .textTheme
-                              .displaySmall
-                              ?.copyWith(
-                                color: Theme.of(context)
-                                    .colorScheme
-                                    .onSurfaceVariant,
-                              ),
-                        ),
-                      ),
-                      Row(
-                        children: [
-                          Icon(
-                            Icons.place_rounded,
-                            size: 24,
-                            color: Theme.of(context).colorScheme.secondary,
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.only(top: 12),
+                          child: Row(
+                            children: state.restaurant.categories!
+                                .map(
+                                  (category) => _buildCategoryComponent(
+                                      context, category),
+                                )
+                                .toList(),
                           ),
-                          const SizedBox(
-                            width: 16.0,
-                          ),
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                state.restaurant.city.toString(),
-                                style: Theme.of(context)
-                                    .textTheme
-                                    .bodyLarge
-                                    ?.copyWith(
-                                      color: Theme.of(context)
-                                          .colorScheme
-                                          .onSurface,
-                                    ),
-                              ),
-                              Text(
-                                state.restaurant.address.toString(),
-                                style: Theme.of(context)
-                                    .textTheme
-                                    .bodyMedium
-                                    ?.copyWith(
-                                      color: Theme.of(context)
-                                          .colorScheme
-                                          .onSurface,
-                                    ),
-                              ),
-                            ],
-                          )
-                        ],
-                      ),
-                      const SizedBox(
-                        height: 24.0,
-                      ),
-                      Text(
-                        "Deskripsi",
-                        style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                              color: Theme.of(context).colorScheme.onSurface,
-                            ),
-                      ),
-                      const SizedBox(
-                        height: 8.0,
-                      ),
-                      Text(
-                        state.restaurant.description.toString(),
-                        style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                              color: Theme.of(context).colorScheme.onSurface,
-                            ),
-                      ),
-                      const SizedBox(
-                        height: 24.0,
-                      ),
-                      Text(
-                        "Daftar Menu",
-                        style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                              color: Theme.of(context).colorScheme.onSurface,
-                            ),
-                      ),
-                      const SizedBox(
-                        height: 8.0,
-                      ),
-                      Column(
-                        children: [
-                          _buildFoodsComponent(
-                              context, state.restaurant.menus!.foods),
-                          _buildDrinkComponent(
-                              context, state.restaurant.menus!.drinks)
-                        ],
-                      ),
-                      const SizedBox(
-                        height: 24.0,
-                      ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text(
-                            "Review",
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 12),
+                          child: Text(
+                            state.restaurant.name.toString(),
                             style: Theme.of(context)
                                 .textTheme
-                                .titleLarge
+                                .displaySmall
                                 ?.copyWith(
-                                  color:
-                                      Theme.of(context).colorScheme.onSurface,
+                                  color: Theme.of(context)
+                                      .colorScheme
+                                      .onSurfaceVariant,
                                 ),
                           ),
-                          TextButton.icon(
-                            onPressed: () {
-                              _nameController.clear();
-                              _reviewController.clear();
+                        ),
+                        Row(
+                          children: [
+                            Icon(
+                              Icons.place_rounded,
+                              size: 24,
+                              color: Theme.of(context).colorScheme.secondary,
+                            ),
+                            const SizedBox(
+                              width: 16.0,
+                            ),
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  state.restaurant.city.toString(),
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .bodyLarge
+                                      ?.copyWith(
+                                        color: Theme.of(context)
+                                            .colorScheme
+                                            .onSurface,
+                                      ),
+                                ),
+                                Text(
+                                  state.restaurant.address.toString(),
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .bodyMedium
+                                      ?.copyWith(
+                                        color: Theme.of(context)
+                                            .colorScheme
+                                            .onSurface,
+                                      ),
+                                ),
+                              ],
+                            )
+                          ],
+                        ),
+                        const SizedBox(
+                          height: 24.0,
+                        ),
+                        Text(
+                          "Deskripsi",
+                          style: Theme.of(context)
+                              .textTheme
+                              .titleLarge
+                              ?.copyWith(
+                                color: Theme.of(context).colorScheme.onSurface,
+                              ),
+                        ),
+                        const SizedBox(
+                          height: 8.0,
+                        ),
+                        Text(
+                          state.restaurant.description.toString(),
+                          style: Theme.of(context)
+                              .textTheme
+                              .bodyLarge
+                              ?.copyWith(
+                                color: Theme.of(context).colorScheme.onSurface,
+                              ),
+                        ),
+                        const SizedBox(
+                          height: 24.0,
+                        ),
+                        Text(
+                          "Daftar Menu",
+                          style: Theme.of(context)
+                              .textTheme
+                              .titleLarge
+                              ?.copyWith(
+                                color: Theme.of(context).colorScheme.onSurface,
+                              ),
+                        ),
+                        const SizedBox(
+                          height: 8.0,
+                        ),
+                        Column(
+                          children: [
+                            _buildFoodsComponent(
+                                context, state.restaurant.menus!.foods),
+                            _buildDrinkComponent(
+                                context, state.restaurant.menus!.drinks)
+                          ],
+                        ),
+                        const SizedBox(
+                          height: 24.0,
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Row(
+                              children: [
+                                Text(
+                                  "Review",
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .titleLarge
+                                      ?.copyWith(
+                                        color: Theme.of(context)
+                                            .colorScheme
+                                            .onSurface,
+                                      ),
+                                ),
+                                const SizedBox(
+                                  width: 8.0,
+                                ),
+                                RestaurantRating(
+                                    rating: state.restaurant.rating.toString()),
+                              ],
+                            ),
+                            TextButton.icon(
+                              onPressed: () {
+                                _nameController.clear();
+                                _reviewController.clear();
 
-                              showDialog(
-                                context: context,
-                                builder: (context) {
-                                  return AlertDialog(
-                                    title: Text(
-                                      "Tambah Review",
-                                      style: Theme.of(context)
-                                          .textTheme
-                                          .titleLarge
-                                          ?.copyWith(
-                                            color: Theme.of(context)
-                                                .colorScheme
-                                                .primary,
-                                          ),
-                                    ),
-                                    content: SingleChildScrollView(
-                                      child: Column(
-                                        mainAxisSize: MainAxisSize.min,
-                                        children: [
-                                          const SizedBox(
-                                            height: 8.0,
-                                          ),
-                                          TextField(
-                                            controller: _nameController,
-                                            decoration: InputDecoration(
-                                              labelText: "Nama",
-                                              border:
-                                                  const OutlineInputBorder(),
-                                              hintText: "Isi Namamu",
-                                              labelStyle: Theme.of(context)
-                                                  .textTheme
-                                                  .labelLarge
-                                                  ?.copyWith(
-                                                    color: Theme.of(context)
-                                                        .colorScheme
-                                                        .onSurface,
-                                                  ),
-                                              hintStyle: Theme.of(context)
-                                                  .textTheme
-                                                  .labelMedium
-                                                  ?.copyWith(
-                                                    color: Theme.of(context)
-                                                        .colorScheme
-                                                        .outline,
-                                                  ),
+                                showDialog(
+                                  context: context,
+                                  builder: (context) {
+                                    return AlertDialog(
+                                      title: Text(
+                                        "Tambah Review",
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .titleLarge
+                                            ?.copyWith(
+                                              color: Theme.of(context)
+                                                  .colorScheme
+                                                  .primary,
                                             ),
-                                            style: Theme.of(context)
-                                                .textTheme
-                                                .labelMedium
-                                                ?.copyWith(
-                                                  color: Theme.of(context)
-                                                      .colorScheme
-                                                      .onSurface,
-                                                ),
-                                          ),
-                                          const SizedBox(
-                                            height: 16.0,
-                                          ),
-                                          TextField(
-                                              controller: _reviewController,
+                                      ),
+                                      content: SingleChildScrollView(
+                                        child: Column(
+                                          mainAxisSize: MainAxisSize.min,
+                                          children: [
+                                            const SizedBox(
+                                              height: 8.0,
+                                            ),
+                                            TextField(
+                                              controller: _nameController,
                                               decoration: InputDecoration(
-                                                labelText: "Review",
+                                                labelText: "Nama",
                                                 border:
                                                     const OutlineInputBorder(),
-                                                hintText: "Isi Reviewmu",
+                                                hintText: "Isi Namamu",
                                                 labelStyle: Theme.of(context)
                                                     .textTheme
                                                     .labelLarge
@@ -314,86 +299,123 @@ class _DetailRestaurantScreenState extends State<DetailRestaurantScreen> {
                                                     color: Theme.of(context)
                                                         .colorScheme
                                                         .onSurface,
-                                                  )),
-                                        ],
-                                      ),
-                                    ),
-                                    actions: [
-                                      TextButton(
-                                        onPressed: () {
-                                          Navigator.pop(context);
-                                        },
-                                        child: const Text("Batal"),
-                                      ),
-                                      FilledButton.tonal(
-                                        onPressed: () {
-                                          addNewReview(context);
-                                        },
-                                        child: Consumer<AddReviewProvider>(
-                                          builder: (context, provider, _) {
-                                            final state = provider.state;
-                                            if (state is AddReviewLoading) {
-                                              return const SizedBox(
-                                                width: 16.0,
-                                                height: 16.0,
-                                                child:
-                                                    CircularProgressIndicator(
-                                                  strokeWidth: 2,
+                                                  ),
+                                            ),
+                                            const SizedBox(
+                                              height: 16.0,
+                                            ),
+                                            TextField(
+                                                controller: _reviewController,
+                                                decoration: InputDecoration(
+                                                  labelText: "Review",
+                                                  border:
+                                                      const OutlineInputBorder(),
+                                                  hintText: "Isi Reviewmu",
+                                                  labelStyle: Theme.of(context)
+                                                      .textTheme
+                                                      .labelLarge
+                                                      ?.copyWith(
+                                                        color: Theme.of(context)
+                                                            .colorScheme
+                                                            .onSurface,
+                                                      ),
+                                                  hintStyle: Theme.of(context)
+                                                      .textTheme
+                                                      .labelMedium
+                                                      ?.copyWith(
+                                                        color: Theme.of(context)
+                                                            .colorScheme
+                                                            .outline,
+                                                      ),
                                                 ),
-                                              );
-                                            } else {
-                                              return const Text("Kirim");
-                                            }
-                                          },
+                                                style: Theme.of(context)
+                                                    .textTheme
+                                                    .labelMedium
+                                                    ?.copyWith(
+                                                      color: Theme.of(context)
+                                                          .colorScheme
+                                                          .onSurface,
+                                                    )),
+                                          ],
                                         ),
                                       ),
-                                    ],
-                                  );
-                                },
-                              );
-                            },
-                            label: const Text("Tambah"),
-                            icon: const Icon(Icons.add),
-                          ),
-                        ],
-                      ),
-                      const SizedBox(
-                        height: 8.0,
-                      ),
-                      Column(
-                        children: state.restaurant.customerReviews!
-                            .map(
-                              (review) => Card.filled(
-                                child: ListTile(
-                                  title: Text(review.name.toString()),
-                                  subtitle: Text(review.review.toString()),
-                                  leading: const Icon(
-                                    Icons.person_rounded,
-                                    size: 32,
+                                      actions: [
+                                        TextButton(
+                                          onPressed: () {
+                                            Navigator.pop(context);
+                                          },
+                                          child: const Text("Batal"),
+                                        ),
+                                        FilledButton.tonal(
+                                          onPressed: () {
+                                            addNewReview(context);
+                                          },
+                                          child: Consumer<AddReviewProvider>(
+                                            builder: (context, provider, _) {
+                                              final state = provider.state;
+                                              if (state is AddReviewLoading) {
+                                                return const SizedBox(
+                                                  width: 16.0,
+                                                  height: 16.0,
+                                                  child:
+                                                      CircularProgressIndicator(
+                                                    strokeWidth: 2,
+                                                  ),
+                                                );
+                                              } else {
+                                                return const Text("Kirim");
+                                              }
+                                            },
+                                          ),
+                                        ),
+                                      ],
+                                    );
+                                  },
+                                );
+                              },
+                              label: const Text("Tambah"),
+                              icon: const Icon(Icons.add),
+                            ),
+                          ],
+                        ),
+                        const SizedBox(
+                          height: 8.0,
+                        ),
+                        Column(
+                          children: state.restaurant.customerReviews!
+                              .map(
+                                (review) => Card.filled(
+                                  child: ListTile(
+                                    title: Text(review.name.toString()),
+                                    subtitle: Text(review.review.toString()),
+                                    leading: const Icon(
+                                      Icons.person_rounded,
+                                      size: 32,
+                                    ),
                                   ),
                                 ),
-                              ),
-                            )
-                            .toList(),
-                      ),
-                      const SizedBox(
-                        height: 24.0,
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-            );
-          } else if (state is DetailRestaurantError) {
-            return Center(
-              child: Text(state.error),
-            );
-          } else {
-            return const Center(
-              child: Text("Unknown error"),
-            );
-          }
-        },
+                              )
+                              .toList(),
+                        ),
+                        const SizedBox(
+                          height: 24.0,
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              );
+            } else if (state is DetailRestaurantError) {
+              return Center(
+                child: Text(state.error),
+              );
+            } else {
+              return const Center(
+                child: Text("Unknown error"),
+              );
+            }
+          },
+        ),
       ),
     );
   }

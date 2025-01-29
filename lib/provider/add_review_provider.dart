@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:foodie/data/datasource/restaurant_service.dart';
 import 'package:foodie/screens/state/add_review_state.dart';
@@ -7,11 +9,6 @@ class AddReviewProvider with ChangeNotifier {
   final RestaurantService _restaurantService = RestaurantService();
 
   AddReviewState get state => _state;
-
-  void resetState() {
-    _state = AddReviewInitial();
-    notifyListeners();
-  }
 
   Future<void> addReview(
       String restaurantId, String name, String review) async {
@@ -26,6 +23,9 @@ class AddReviewProvider with ChangeNotifier {
       } else {
         _state = AddReviewError(response.message);
       }
+      notifyListeners();
+    } on SocketException catch (e) {
+      _state = AddReviewError(e.message);
       notifyListeners();
     } catch (e) {
       _state = AddReviewError(e.toString());
