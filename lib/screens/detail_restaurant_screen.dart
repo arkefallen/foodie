@@ -67,18 +67,18 @@ class _DetailRestaurantScreenState extends State<DetailRestaurantScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Hero(
-      tag: widget.restaurantId,
-      child: Scaffold(
-        appBar: AppBar(
-          leading: IconButton(
-            icon: const Icon(Icons.arrow_back),
-            onPressed: () {
-              Navigator.pop(context);
-            },
-          ),
+    return Scaffold(
+      appBar: AppBar(
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back),
+          onPressed: () {
+            Navigator.pop(context);
+          },
         ),
-        body: Consumer<DetailRestaurantProvider>(
+      ),
+      body: Hero(
+        tag: widget.restaurantId,
+        child: Consumer<DetailRestaurantProvider>(
           builder: (context, provider, _) {
             final state = provider.state;
             if (state is DetailRestaurantLoading) {
@@ -245,7 +245,7 @@ class _DetailRestaurantScreenState extends State<DetailRestaurantScreen> {
                               onPressed: () {
                                 _nameController.clear();
                                 _reviewController.clear();
-
+            
                                 showDialog(
                                   context: context,
                                   builder: (context) {
