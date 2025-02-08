@@ -3,6 +3,7 @@ import 'package:foodie/data/datasource/restaurant_service.dart';
 import 'package:foodie/provider/add_review_provider.dart';
 import 'package:foodie/provider/bottom_navigation_provider.dart';
 import 'package:foodie/provider/detail_restaurant_provider.dart';
+import 'package:foodie/provider/favorite_restaurant_provider.dart';
 import 'package:foodie/provider/list_restaurant_provider.dart';
 import 'package:foodie/provider/search_restaurants_provider.dart';
 import 'package:foodie/screens/detail_restaurant_screen.dart';
@@ -21,7 +22,8 @@ void main() {
       ChangeNotifierProvider(create: (_) => DetailRestaurantProvider()),
       ChangeNotifierProvider(create: (_) => AddReviewProvider()),
       ChangeNotifierProvider(create: (_) => SearchRestaurantsProvider()),
-      ChangeNotifierProvider(create: (_) => BottomNavigationProvider())
+      ChangeNotifierProvider(create: (_) => BottomNavigationProvider()),
+      ChangeNotifierProvider(create: (_) => FavoriteRestaurantProvider()),
     ],
     child: const FoodieApp(),
   ));

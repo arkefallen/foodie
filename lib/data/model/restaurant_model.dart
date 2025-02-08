@@ -32,6 +32,16 @@ class Restaurant {
   factory Restaurant.fromRawJson(String str) =>
       Restaurant.fromJson(json.decode(str));
 
+  factory Restaurant.fromLocalDbJson(Map<String, dynamic> json) {
+    return Restaurant(
+        id: json["id"],
+        name: json["name"],
+        city: json["city"],
+        rating: double.parse(json["rating"]),
+        pictureId: json["picture_id"],
+      );
+  }
+
   factory Restaurant.fromJson(Map<String, dynamic> json) => Restaurant(
         id: json["id"],
         name: json["name"],
@@ -59,4 +69,12 @@ class Restaurant {
         pictureId: json["pictureId"],
         rating: json["rating"]?.toDouble(),
       );
+
+  Map<String, dynamic> toJson() => {
+        "id": id,
+        "name": name,
+        "city": city,
+        "rating": rating.toString(),
+        "picture_id": pictureId,
+      };
 }

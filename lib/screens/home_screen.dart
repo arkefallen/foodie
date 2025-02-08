@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:foodie/provider/bottom_navigation_provider.dart';
+import 'package:foodie/screens/favorite_restaurant_screen.dart';
 import 'package:foodie/screens/restaurant_screen.dart';
 import 'package:foodie/screens/search_restaurant_screen.dart';
 import 'package:provider/provider.dart';
@@ -15,6 +16,7 @@ class _HomeScreenState extends State<HomeScreen> {
   final List<Widget> _listWidget = [
     const RestaurantScreen(),
     const SearchRestaurantScreen(),
+    const FavoriteRestaurantScreen()
   ];
 
   @override
@@ -32,6 +34,8 @@ class _HomeScreenState extends State<HomeScreen> {
             icon: Icon(Icons.search_rounded),
             label: "Cari",
           ),
+          BottomNavigationBarItem(
+              icon: Icon(Icons.favorite_rounded), label: "Favorit")
         ],
         currentIndex: context.watch<BottomNavigationProvider>().currentIndex,
         onTap: (index) {

@@ -3,6 +3,7 @@ import 'package:foodie/data/model/menu_category.dart';
 import 'package:foodie/data/model/restaurant_images_enum.dart';
 import 'package:foodie/provider/add_review_provider.dart';
 import 'package:foodie/provider/detail_restaurant_provider.dart';
+import 'package:foodie/provider/favorite_restaurant_provider.dart';
 import 'package:foodie/screens/state/add_review_state.dart';
 import 'package:foodie/screens/state/detail_restaurant_state.dart';
 import 'package:foodie/screens/widget/restaurant_rating.dart';
@@ -29,6 +30,10 @@ class _DetailRestaurantScreenState extends State<DetailRestaurantScreen> {
       context
           .read<DetailRestaurantProvider>()
           .fetchDetailRestaurant(widget.restaurantId);
+      // ignore: use_build_context_synchronously
+      context
+          .read<FavoriteRestaurantProvider>()
+          .checkIsFavorite(widget.restaurantId);
     });
   }
 
@@ -86,6 +91,7 @@ class _DetailRestaurantScreenState extends State<DetailRestaurantScreen> {
                 child: CircularProgressIndicator(),
               );
             } else if (state is DetailRestaurantSuccess) {
+              final restaurant = state.restaurant;
               return Padding(
                 padding: const EdgeInsets.only(left: 16.0, right: 16.0),
                 child: ListView(
@@ -93,28 +99,68 @@ class _DetailRestaurantScreenState extends State<DetailRestaurantScreen> {
                     const SizedBox(
                       height: 24.0,
                     ),
-                    ClipRRect(
-                      borderRadius: BorderRadius.circular(16),
-                      child: Image.network(
-                        RestaurantImage.medium
-                            .getImageUrl(state.restaurant.pictureId.toString()),
-                        fit: BoxFit.cover,
-                      ),
+                    Stack(
+                      children: [
+                        Column(
+                          children: [
+                            ClipRRect(
+                              borderRadius: BorderRadius.circular(16),
+                              child: Image.network(
+                                RestaurantImage.small.getImageUrl(
+                                    state.restaurant.pictureId.toString()),
+                                fit: BoxFit.cover,
+                              ),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.only(top: 12),
+                              child: Row(
+                                children: state.restaurant.categories!
+                                    .map(
+                                      (category) => _buildCategoryComponent(
+                                          context, category),
+                                    )
+                                    .toList(),
+                              ),
+                            ),
+                          ],
+                        ),
+                        Positioned(
+                          right: 36.0,
+                          bottom: 36.0,
+                          child: context
+                                  .watch<FavoriteRestaurantProvider>()
+                                  .isFavorite
+                              ? IconButton.filledTonal(
+                                  iconSize: 30.0,
+                                  onPressed: () {
+                                    context
+                                        .read<FavoriteRestaurantProvider>()
+                                        .removeRestaurant(restaurant);
+                                    context
+                                        .read<FavoriteRestaurantProvider>()
+                                        .loadFavoriteRestaurant();
+                                  },
+                                  icon: Icon(
+                                    Icons.favorite,
+                                    color: Colors.red.shade400,
+                                  ))
+                              : IconButton.filledTonal(
+                                  iconSize: 30.0,
+                                  onPressed: () {
+                                    context
+                                        .read<FavoriteRestaurantProvider>()
+                                        .addRestaurant(restaurant);
+                                    context
+                                        .read<FavoriteRestaurantProvider>()
+                                        .loadFavoriteRestaurant();
+                                  },
+                                  icon: const Icon(Icons.favorite_outline)),
+                        )
+                      ],
                     ),
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Padding(
-                          padding: const EdgeInsets.only(top: 12),
-                          child: Row(
-                            children: state.restaurant.categories!
-                                .map(
-                                  (category) => _buildCategoryComponent(
-                                      context, category),
-                                )
-                                .toList(),
-                          ),
-                        ),
                         Padding(
                           padding: const EdgeInsets.symmetric(vertical: 12),
                           child: Text(
@@ -245,7 +291,7 @@ class _DetailRestaurantScreenState extends State<DetailRestaurantScreen> {
                               onPressed: () {
                                 _nameController.clear();
                                 _reviewController.clear();
-            
+
                                 showDialog(
                                   context: context,
                                   builder: (context) {

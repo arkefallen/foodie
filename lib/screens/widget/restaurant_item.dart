@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:foodie/data/model/restaurant_images_enum.dart';
 import 'package:foodie/data/model/restaurant_model.dart';
+import 'package:foodie/provider/favorite_restaurant_provider.dart';
 import 'package:foodie/screens/widget/restaurant_rating.dart';
+import 'package:provider/provider.dart';
 
 class RestaurantItem extends StatelessWidget {
   final Restaurant restaurant;
@@ -33,35 +35,80 @@ class RestaurantItem extends StatelessWidget {
                   ),
                 ),
               ),
-              Flexible(
-                child: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        restaurant.name.toString(),
-                        softWrap: true,
-                        maxLines: 2,
-                        overflow: TextOverflow.ellipsis,
-                        style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                              color: Theme.of(context)
-                                  .colorScheme
-                                  .onPrimaryContainer,
-                              fontWeight: FontWeight.bold,
+              Expanded(
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Flexible(
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              restaurant.name.toString(),
+                              softWrap: true,
+                              maxLines: 2,
+                              overflow: TextOverflow.ellipsis,
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .bodyLarge
+                                  ?.copyWith(
+                                    color: Theme.of(context)
+                                        .colorScheme
+                                        .onPrimaryContainer,
+                                    fontWeight: FontWeight.bold,
+                                  ),
                             ),
-                      ),
-                      Text(
-                        "di ${restaurant.city.toString()}",
-                        style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                              color: Theme.of(context)
-                                  .colorScheme
-                                  .onPrimaryContainer,
+                            Text(
+                              "di ${restaurant.city.toString()}",
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .bodyMedium
+                                  ?.copyWith(
+                                    color: Theme.of(context)
+                                        .colorScheme
+                                        .onPrimaryContainer,
+                                  ),
                             ),
+                            RestaurantRating(
+                                rating: restaurant.rating.toString()),
+                          ],
+                        ),
                       ),
-                      RestaurantRating(rating: restaurant.rating.toString()),
-                    ],
-                  ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.only(right: 8.0),
+                      child: context
+                              .watch<FavoriteRestaurantProvider>()
+                              .isThisItemFavorite(restaurant.id.toString())
+                          ? IconButton.filledTonal(
+                              iconSize: 30.0,
+                              onPressed: () {
+                                context
+                                    .read<FavoriteRestaurantProvider>()
+                                    .removeRestaurant(restaurant);
+                                context
+                                    .read<FavoriteRestaurantProvider>()
+                                    .loadFavoriteRestaurant();
+                              },
+                              icon: Icon(
+                                Icons.favorite,
+                                color: Colors.red.shade400,
+                              ))
+                          : IconButton.filledTonal(
+                              iconSize: 30.0,
+                              onPressed: () {
+                                context
+                                    .read<FavoriteRestaurantProvider>()
+                                    .addRestaurant(restaurant);
+                                context
+                                    .read<FavoriteRestaurantProvider>()
+                                    .loadFavoriteRestaurant();
+                              },
+                              icon: const Icon(Icons.favorite_outline)),
+                    )
+                  ],
                 ),
               ),
             ],
