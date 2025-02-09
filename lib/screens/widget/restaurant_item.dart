@@ -82,7 +82,7 @@ class RestaurantItem extends StatelessWidget {
                       child: context
                               .watch<FavoriteRestaurantProvider>()
                               .isThisItemFavorite(restaurant.id.toString())
-                          ? IconButton.filledTonal(
+                          ? IconButton(
                               iconSize: 30.0,
                               onPressed: () {
                                 context
@@ -96,7 +96,7 @@ class RestaurantItem extends StatelessWidget {
                                 Icons.favorite,
                                 color: Colors.red.shade400,
                               ))
-                          : IconButton.filledTonal(
+                          : IconButton(
                               iconSize: 30.0,
                               onPressed: () {
                                 context
