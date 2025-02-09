@@ -1,6 +1,7 @@
 // ignore_for_file: use_build_context_synchronously
 
 import 'package:flutter/material.dart';
+import 'package:foodie/provider/favorite_restaurant_provider.dart';
 import 'package:foodie/provider/list_restaurant_provider.dart';
 import 'package:foodie/screens/state/list_restaurant_state.dart';
 import 'package:foodie/screens/widget/restaurant_item.dart';
@@ -19,6 +20,7 @@ class _RestaurantScreenState extends State<RestaurantScreen> {
     super.initState();
     Future.microtask(() {
       context.read<ListRestaurantProvider>().fetchListRestaurants();
+      context.read<FavoriteRestaurantProvider>().loadFavoriteRestaurant();
     });
   }
 
