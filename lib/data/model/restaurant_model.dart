@@ -34,12 +34,12 @@ class Restaurant {
 
   factory Restaurant.fromLocalDbJson(Map<String, dynamic> json) {
     return Restaurant(
-        id: json["id"],
-        name: json["name"],
-        city: json["city"],
-        rating: double.parse(json["rating"]),
-        pictureId: json["picture_id"],
-      );
+      id: json["id"],
+      name: json["name"],
+      city: json["city"],
+      rating: double.parse(json["rating"]),
+      pictureId: json["picture_id"],
+    );
   }
 
   factory Restaurant.fromJson(Map<String, dynamic> json) => Restaurant(

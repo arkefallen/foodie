@@ -6,7 +6,6 @@ import 'package:foodie/provider/list_restaurant_provider.dart';
 import 'package:foodie/provider/theme_settings_provider.dart';
 import 'package:foodie/screens/state/list_restaurant_state.dart';
 import 'package:foodie/screens/widget/restaurant_item.dart';
-import 'package:foodie/util.dart';
 import 'package:provider/provider.dart';
 
 enum ThemeSettings { light, dark }
@@ -27,19 +26,11 @@ class _RestaurantScreenState extends State<RestaurantScreen> {
     Future.microtask(() {
       context.read<ListRestaurantProvider>().fetchListRestaurants();
       context.read<FavoriteRestaurantProvider>().loadFavoriteRestaurant();
-      TextTheme textTheme = createTextTheme(context, "Manrope", "Merriweather");
-      final currentTheme = context.read<ThemeSettingsProvider>().getTheme(textTheme);
-      if (currentTheme.brightness == Brightness.dark) {
-        groupValue = ThemeSettings.dark;
-      } else {
-        groupValue = ThemeSettings.light;
-      }
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    TextTheme textTheme = createTextTheme(context, "Manrope", "Merriweather");
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.surface,
@@ -52,9 +43,9 @@ class _RestaurantScreenState extends State<RestaurantScreen> {
         actions: [
           IconButton(
             onPressed: () {
-              showChangeThemeButton(context, textTheme);
+              Navigator.pushNamed(context, '/settings');
             },
-            icon: const Icon(Icons.contrast),
+            icon: const Icon(Icons.settings_rounded),
           ),
         ],
       ),

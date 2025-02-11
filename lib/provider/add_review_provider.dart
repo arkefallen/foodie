@@ -6,9 +6,11 @@ import 'package:foodie/screens/state/add_review_state.dart';
 
 class AddReviewProvider with ChangeNotifier {
   AddReviewState _state = AddReviewInitial();
-  final RestaurantService _restaurantService = RestaurantService();
+  final RestaurantService _restaurantService;
 
   AddReviewState get state => _state;
+
+  AddReviewProvider(this._restaurantService);
 
   Future<void> addReview(
       String restaurantId, String name, String review) async {

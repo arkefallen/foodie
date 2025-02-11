@@ -5,10 +5,12 @@ import 'package:foodie/data/datasource/restaurant_service.dart';
 import 'package:foodie/screens/state/search_restaurant_state.dart';
 
 class SearchRestaurantsProvider with ChangeNotifier {
-  final RestaurantService _restaurantService = RestaurantService();
+  final RestaurantService _restaurantService;
   SearchRestaurantState _state = SearchRestaurantInitial();
 
   SearchRestaurantState get state => _state;
+
+  SearchRestaurantsProvider(this._restaurantService);
 
   Future<void> searchRestaurants(String query) async {
     _state = SearchRestaurantLoading();

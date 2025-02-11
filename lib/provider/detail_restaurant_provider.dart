@@ -5,7 +5,8 @@ import 'package:foodie/data/datasource/restaurant_service.dart';
 import 'package:foodie/screens/state/detail_restaurant_state.dart';
 
 class DetailRestaurantProvider with ChangeNotifier {
-  final RestaurantService _restaurantService = RestaurantService();
+  final RestaurantService _restaurantService;
+  DetailRestaurantProvider(this._restaurantService);
 
   DetailRestaurantState _state = DetailRestaurantInitial();
   DetailRestaurantState get state => _state;

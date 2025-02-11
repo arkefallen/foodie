@@ -6,7 +6,9 @@ import 'package:foodie/screens/state/list_favorite_restaurants_state.dart';
 import 'package:foodie/screens/state/remove_favorite_restaurant_state.dart';
 
 class FavoriteRestaurantProvider with ChangeNotifier {
-  final LocalDatabaseService _localDatabaseService = LocalDatabaseService();
+  final LocalDatabaseService _localDatabaseService;
+
+  FavoriteRestaurantProvider(this._localDatabaseService);
 
   ListFavoriteRestaurantState _restaurantState =
       ListFavoriteRestaurantInitial();
