@@ -1,8 +1,11 @@
 import 'package:flutter/src/material/text_theme.dart';
 import 'package:flutter/src/material/theme_data.dart';
+import 'package:foodie/data/datasource/reminder_preferences_service.dart';
 import 'package:foodie/data/datasource/restaurant_service.dart';
+import 'package:foodie/provider/daily_reminder_provider.dart';
 import 'package:foodie/provider/favorite_restaurant_provider.dart';
 import 'package:foodie/provider/list_restaurant_provider.dart';
+import 'package:foodie/provider/settings_provider.dart';
 import 'package:foodie/provider/theme_settings_provider.dart';
 import 'package:mocktail/mocktail.dart';
 
@@ -24,3 +27,15 @@ class MockThemeSettingsProvider extends Mock implements ThemeSettingsProvider {
   @override
   ThemeData getTheme(TextTheme textTheme) => ThemeData.light();
 }
+
+class MockSettingsProvider extends Mock implements SettingsProvider {
+  @override
+  Future<void> loadSettings() async {}
+
+  @override
+  void toggleDarkMode(bool value) {}
+}
+
+class MockDailyReminderProvider extends Mock implements DailyReminderProvider {}
+
+class MockReminderPreferenceService extends Mock implements ReminderPreferencesService {}

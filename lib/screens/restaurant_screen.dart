@@ -46,6 +46,7 @@ class _RestaurantScreenState extends State<RestaurantScreen> {
               Navigator.pushNamed(context, '/settings');
             },
             icon: const Icon(Icons.settings_rounded),
+            key: const ValueKey("icon_settings"),
           ),
         ],
       ),

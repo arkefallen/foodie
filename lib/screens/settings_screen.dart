@@ -95,6 +95,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
               title: const Text(
                 "Mode Gelap",
                 style: TextStyle(fontWeight: FontWeight.bold),
+                key: ValueKey("theme_title"),
               ),
               subtitle: const Text(
                   "Ubah tema aplikasi Anda menjadi mode gelap/terang"),

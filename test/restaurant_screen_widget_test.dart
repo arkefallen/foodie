@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:foodie/main.dart';
 import 'package:foodie/provider/favorite_restaurant_provider.dart';
 import 'package:foodie/provider/list_restaurant_provider.dart';
-import 'package:foodie/provider/theme_settings_provider.dart';
 import 'package:foodie/screens/restaurant_screen.dart';
 import 'package:foodie/screens/state/list_favorite_restaurants_state.dart';
 import 'package:foodie/screens/state/list_restaurant_state.dart';

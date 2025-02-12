@@ -23,7 +23,9 @@ dev_dependencies:
   flutter_test:
     sdk: flutter
   flutter_lints: ^4.0.0
-flutter: 
+  integration_test:
+    sdk: flutter
+flutter:
   uses-material-design: true
   # fonts:
   #   - family: Schyler
@@ -36,6 +38,3 @@ flutter:
   #       - asset: fonts/TrajanPro.ttf
   #       - asset: fonts/TrajanPro_Bold.ttf
   #         weight: 700
-  
-  
-  
