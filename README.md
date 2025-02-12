@@ -8,6 +8,9 @@ Foodie is a Flutter application that allows users to browse a list of restaurant
 - View detailed information about each restaurant
 - Search for restaurants by name
 - Add new review to specific restaurant
+- Provides daily reminder notification to have lunch at 11.00 AM in restaurant
+- Change theme to dark or light mode
+- Save your favorite restaurant
 
 ## How to Use the App
 

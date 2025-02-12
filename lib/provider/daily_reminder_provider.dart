@@ -11,7 +11,6 @@ class DailyReminderProvider extends ChangeNotifier {
   bool? _permission = false;
   bool? get permission => _permission;
 
-
   Future<void> scheduleDailyReminderNotificationEveryElevenAM() async {
     await _workManagerService.runPeriodicTask();
   }

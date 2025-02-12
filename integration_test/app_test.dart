@@ -66,7 +66,7 @@ void main() {
     );
   });
 
-  testWidgets("When Settings Button Click, the theme settings should apper",
+  testWidgets("When Settings Button in RestaurantScreen() is tapped, the SettingsScreen() should display theme settings",
       (tester) async {
     final robot = SettingsRobot(tester);
 

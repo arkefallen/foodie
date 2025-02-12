@@ -14,7 +14,7 @@ class ListRestaurantSuccess extends ListRestaurantState {
   final List<Restaurant> restaurants;
 
   ListRestaurantSuccess({required this.restaurants});
-  
+
   @override
   List<Object?> get props => [restaurants];
 }
@@ -23,7 +23,7 @@ class ListRestaurantError extends ListRestaurantState {
   final String error;
 
   ListRestaurantError({required this.error});
-  
+
   @override
   List<Object?> get props => [error];
 }
