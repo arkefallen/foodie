@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:foodie/data/model/restaurant_images_enum.dart';
 import 'package:foodie/data/model/restaurant_model.dart';
@@ -24,15 +25,18 @@ class RestaurantItem extends StatelessWidget {
                 child: SizedBox(
                   width: 150,
                   child: ClipRRect(
-                    borderRadius: BorderRadius.circular(10),
-                    child: Image.network(
-                      RestaurantImage.small
-                          .getImageUrl(restaurant.pictureId.toString()),
-                      width: double.infinity,
-                      height: 100,
-                      fit: BoxFit.cover,
-                    ),
-                  ),
+                      borderRadius: BorderRadius.circular(10),
+                      child: CachedNetworkImage(
+                        imageUrl: RestaurantImage.small
+                            .getImageUrl(restaurant.pictureId.toString()),
+                        placeholder: (context, url) =>
+                            const Center(child: CircularProgressIndicator()),
+                        errorWidget: (context, url, error) => Icon(
+                          Icons.image_not_supported_rounded,
+                          color:
+                              Theme.of(context).colorScheme.onPrimaryContainer,
+                        ),
+                      )),
                 ),
               ),
               Expanded(

@@ -1,5 +1,4 @@
 import 'package:flutter/src/material/text_theme.dart';
-import 'package:flutter/src/material/theme_data.dart';
 import 'package:foodie/data/datasource/reminder_preferences_service.dart';
 import 'package:foodie/data/datasource/restaurant_service.dart';
 import 'package:foodie/provider/daily_reminder_provider.dart';
@@ -25,7 +24,7 @@ class MockFavoriteRestaurantProvider extends Mock
 
 class MockThemeSettingsProvider extends Mock implements ThemeSettingsProvider {
   @override
-  ThemeData getTheme(TextTheme textTheme) => ThemeData.light();
+  Future<void> getTheme(TextTheme textTheme) ;
 }
 
 class MockSettingsProvider extends Mock implements SettingsProvider {

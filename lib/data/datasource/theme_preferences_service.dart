@@ -3,7 +3,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 class ThemePreferencesService {
   static const String _darkModeKey = 'dark_mode';
 
-  static void saveSettings(bool value) async {
+  Future<void> saveSettings(bool value) async {
     final prefs = await SharedPreferences.getInstance();
     prefs.setBool(_darkModeKey, value);
   }

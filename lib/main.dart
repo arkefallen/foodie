@@ -5,6 +5,7 @@ import 'package:foodie/data/datasource/local_database_service.dart';
 import 'package:foodie/data/datasource/notification_service.dart';
 import 'package:foodie/data/datasource/reminder_preferences_service.dart';
 import 'package:foodie/data/datasource/restaurant_service.dart';
+import 'package:foodie/data/datasource/theme_preferences_service.dart';
 import 'package:foodie/data/datasource/worker_service.dart';
 import 'package:foodie/provider/add_review_provider.dart';
 import 'package:foodie/provider/bottom_navigation_provider.dart';
@@ -21,6 +22,7 @@ import 'package:foodie/screens/home_screen.dart';
 import 'package:foodie/screens/restaurant_screen.dart';
 import 'package:foodie/screens/search_restaurant_screen.dart';
 import 'package:foodie/screens/settings_screen.dart';
+import 'package:foodie/screens/state/theme_settings_state.dart';
 import 'package:provider/provider.dart';
 import 'util.dart';
 
@@ -38,6 +40,7 @@ void main() {
       Provider(
         create: (_) => ReminderPreferencesService(),
       ),
+      Provider(create: (_) => ThemePreferencesService()),
       ChangeNotifierProvider(
           create: (_) =>
               ListRestaurantProvider(restaurantService: RestaurantService())),
@@ -54,7 +57,7 @@ void main() {
       ChangeNotifierProvider(
           create: (context) =>
               FavoriteRestaurantProvider(context.read<LocalDatabaseService>())),
-      ChangeNotifierProvider(create: (_) => ThemeSettingsProvider()),
+      ChangeNotifierProvider(create: (context) => ThemeSettingsProvider(context.read<ThemePreferencesService>())),
       ChangeNotifierProvider(
           create: (context) =>
               SettingsProvider(context.read<ReminderPreferencesService>())),
@@ -69,32 +72,54 @@ void main() {
   ));
 }
 
-class FoodieApp extends StatelessWidget {
+class FoodieApp extends StatefulWidget {
   const FoodieApp({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  State<FoodieApp> createState() => _FoodieAppState();
+}
+
+class _FoodieAppState extends State<FoodieApp> {
+
+  @override
+  void initState() {
+    super.initState();
     TextTheme textTheme = createTextTheme(context, "Manrope", "Merriweather");
+    Future.microtask(() {
+      context.read<ThemeSettingsProvider>().getTheme(textTheme);
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return Consumer<ThemeSettingsProvider>(
       builder: (context, provider, _) {
-        return MaterialApp(
-          title: 'Foodie',
-          theme: provider.getTheme(textTheme),
-          home: const HomeScreen(),
-          routes: {
-            '/home': (context) => const HomeScreen(),
-            '/detail': (context) {
-              final restaurantId =
-                  ModalRoute.of(context)!.settings.arguments as String;
-              return DetailRestaurantScreen(restaurantId: restaurantId);
+        if (provider.themeData is ThemeSettingsSuccess) {
+          final state = provider.themeData as ThemeSettingsSuccess;
+          return MaterialApp(
+            title: 'Foodie',
+            theme: state.theme,
+            darkTheme: state.darkTheme,
+            home: const HomeScreen(),
+            routes: {
+              '/home': (context) => const HomeScreen(),
+              '/detail': (context) {
+                final restaurantId =
+                ModalRoute.of(context)!.settings.arguments as String;
+                return DetailRestaurantScreen(restaurantId: restaurantId);
+              },
+              '/restaurant': (context) => const RestaurantScreen(),
+              '/favorite': (context) => const FavoriteRestaurantScreen(),
+              '/search': (context) => const SearchRestaurantScreen(),
+              '/settings': (context) => const SettingsScreen(),
             },
-            '/restaurant': (context) => const RestaurantScreen(),
-            '/favorite': (context) => const FavoriteRestaurantScreen(),
-            '/search': (context) => const SearchRestaurantScreen(),
-            '/settings': (context) => const SettingsScreen(),
-          },
-        );
-      },
+          );
+        } else if (provider.themeData is ThemeSettingsError) {
+          final state = provider.themeData as ThemeSettingsError;
+          return Center(child: Text(state.error));
+        }
+        return const CircularProgressIndicator();
+      }
     );
   }
 }

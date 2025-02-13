@@ -3,12 +3,9 @@
 import 'package:flutter/material.dart';
 import 'package:foodie/provider/favorite_restaurant_provider.dart';
 import 'package:foodie/provider/list_restaurant_provider.dart';
-import 'package:foodie/provider/theme_settings_provider.dart';
 import 'package:foodie/screens/state/list_restaurant_state.dart';
 import 'package:foodie/screens/widget/restaurant_item.dart';
 import 'package:provider/provider.dart';
-
-enum ThemeSettings { light, dark }
 
 class RestaurantScreen extends StatefulWidget {
   const RestaurantScreen({super.key});
@@ -18,8 +15,6 @@ class RestaurantScreen extends StatefulWidget {
 }
 
 class _RestaurantScreenState extends State<RestaurantScreen> {
-  late ThemeSettings groupValue;
-
   @override
   void initState() {
     super.initState();
@@ -89,61 +84,5 @@ class _RestaurantScreenState extends State<RestaurantScreen> {
         },
       ),
     );
-  }
-
-  Future<dynamic> showChangeThemeButton(
-      BuildContext context, TextTheme textTheme) {
-    return showAdaptiveDialog(
-        context: context,
-        builder: (context) {
-          return AlertDialog(
-            title: Text(
-              "Ubah Tema",
-              style: TextStyle(
-                color: Theme.of(context).colorScheme.onSecondaryContainer,
-              ),
-            ),
-            actions: [
-              TextButton(
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-                child: const Text("Tutup"),
-              ),
-            ],
-            content: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                RadioListTile.adaptive(
-                  title: const Text("Cerah"),
-                  value: ThemeSettings.light,
-                  groupValue: groupValue,
-                  onChanged: (_) {
-                    context
-                        .read<ThemeSettingsProvider>()
-                        .setLightMode(textTheme);
-                    setState(() {
-                      groupValue = ThemeSettings.light;
-                    });
-                  },
-                ),
-                RadioListTile.adaptive(
-                  title: const Text("Gelap"),
-                  value: ThemeSettings.dark,
-                  groupValue: groupValue,
-                  onChanged: (_) {
-                    context
-                        .read<ThemeSettingsProvider>()
-                        .setDarkMode(textTheme);
-                    setState(() {
-                      groupValue = ThemeSettings.dark;
-                    });
-                  },
-                ),
-              ],
-            ),
-          );
-        });
   }
 }

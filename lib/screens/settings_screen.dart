@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:foodie/provider/daily_reminder_provider.dart';
 import 'package:foodie/provider/settings_provider.dart';
 import 'package:foodie/provider/theme_settings_provider.dart';
+import 'package:foodie/screens/state/theme_settings_state.dart';
 import 'package:foodie/util.dart';
 import 'package:provider/provider.dart';
 
@@ -21,9 +22,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
     Future.microtask(() {
       context.read<SettingsProvider>().loadSettings();
       TextTheme textTheme = createTextTheme(context, "Manrope", "Merriweather");
-      final currentTheme =
-          context.read<ThemeSettingsProvider>().getTheme(textTheme);
-      if (currentTheme.brightness == Brightness.dark) {
+      context.read<ThemeSettingsProvider>().getTheme(textTheme);
+      final currentTheme = context.read<ThemeSettingsProvider>().themeData as ThemeSettingsSuccess;
+      if (currentTheme.theme.brightness == Brightness.dark) {
         context.read<SettingsProvider>().toggleDarkMode(true);
       } else {
         context.read<SettingsProvider>().toggleDarkMode(false);
