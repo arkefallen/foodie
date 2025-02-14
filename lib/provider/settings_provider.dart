@@ -23,7 +23,7 @@ class SettingsProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> loadSettings() async {
+  void loadSettings() async {
     _dailyReminder = await _reminderPreferencesService.readSettings();
     notifyListeners();
   }

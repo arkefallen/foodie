@@ -1,6 +1,6 @@
-import 'package:flutter/src/material/text_theme.dart';
 import 'package:foodie/data/datasource/reminder_preferences_service.dart';
 import 'package:foodie/data/datasource/restaurant_service.dart';
+import 'package:foodie/data/datasource/theme_preferences_service.dart';
 import 'package:foodie/provider/daily_reminder_provider.dart';
 import 'package:foodie/provider/favorite_restaurant_provider.dart';
 import 'package:foodie/provider/list_restaurant_provider.dart';
@@ -22,19 +22,12 @@ class MockFavoriteRestaurantProvider extends Mock
   Future<void> loadFavoriteRestaurant() async {}
 }
 
-class MockThemeSettingsProvider extends Mock implements ThemeSettingsProvider {
-  @override
-  Future<void> getTheme(TextTheme textTheme) ;
-}
+class MockThemeSettingsProvider extends Mock implements ThemeSettingsProvider {}
 
-class MockSettingsProvider extends Mock implements SettingsProvider {
-  @override
-  Future<void> loadSettings() async {}
-
-  @override
-  void toggleDarkMode(bool value) {}
-}
+class MockSettingsProvider extends Mock implements SettingsProvider {}
 
 class MockDailyReminderProvider extends Mock implements DailyReminderProvider {}
 
 class MockReminderPreferenceService extends Mock implements ReminderPreferencesService {}
+
+class MockThemePreferenceService extends Mock implements ThemePreferencesService {}

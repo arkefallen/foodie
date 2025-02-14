@@ -9,12 +9,16 @@ class ThemeSettingsProvider with ChangeNotifier {
   ThemeSettingsState _themeData = ThemeSettingsInitial();
   ThemeSettingsState get themeData => _themeData;
 
-  Future<void> getTheme(TextTheme textTheme) async {
+  void getTheme(TextTheme textTheme) async {
     final isDarkMode = await _themePreferencesService.readSettings();
     _themeData = ThemeSettingsLoading();
     notifyListeners();
-    if (isDarkMode) {
-      _themeData = ThemeSettingsSuccess(theme: FoodieTheme(textTheme).dark(), darkTheme: FoodieTheme(textTheme).dark());
+    if (isDarkMode != null) {
+      if (isDarkMode as bool) {
+        _themeData = ThemeSettingsSuccess(theme: FoodieTheme(textTheme).dark(), darkTheme: FoodieTheme(textTheme).dark());
+      } else {
+        _themeData = ThemeSettingsSuccess(theme: FoodieTheme(textTheme).light(), darkTheme: FoodieTheme(textTheme).dark());
+      }
     } else {
       _themeData = ThemeSettingsSuccess(theme: FoodieTheme(textTheme).light(), darkTheme: FoodieTheme(textTheme).dark());
     }

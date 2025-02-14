@@ -10,6 +10,6 @@ class ThemePreferencesService {
 
   Future<dynamic> readSettings() async {
     final prefs = await SharedPreferences.getInstance();
-    return prefs.get(_darkModeKey);
+    return prefs.get(_darkModeKey) ?? false;
   }
 }
